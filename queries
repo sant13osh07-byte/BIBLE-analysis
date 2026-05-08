@@ -1,0 +1,120 @@
+-- DATABASE CREATION
+create database bible;
+use bible;
+
+-- BASIC DATA EXPLORATION
+select * from bible;
+show  tables;
+
+-- FILTERING DATA BY BOOK NAME
+select * from bible
+where `book name` = "Genesis";
+
+-- SEARCHING VERSES STARTING WITH JESUS
+select `book name` , `book number`,chapter,verse,`text`
+from bible 
+where text like 'jesus%' ;
+
+-- COUNT OF VERSES CONTAINING JESUS
+select count(*)
+from bible 
+where text like '%jesus%' ;
+
+-- DISPLAYING VERSES CONTAINING JESUS
+select `book name` , `book number`,chapter,verse,`text`
+from bible 
+where text like '%jesus%' ;
+
+-- TOTAL VERSE COUNT BY BOOK
+select count(*)
+from bible 
+group by `book name` ;
+
+-- TOTAL VERSES BY BOOK AND CHAPTER
+select `book name`,chapter,count(*)
+from bible 
+group by `book name`,chapter;
+
+-- TOTAL CHAPTERS IN EACH BOOK
+select `book name`,count( distinct Chapter)
+from bible 
+group by `Book Name`
+order by `Book Name`;
+
+-- SEARCHING VERSES CONTAINING DAVID
+select `book name` , `book number`,chapter,verse,`text`
+from bible 
+where text like '%david%' ;
+
+-- SEARCHING VERSES CONTAINING BOTH COMING AND JESUS
+select `book name` , `book number`,chapter,verse,`text`
+from bible 
+where text like '%jesus' ;
+
+-- SEARCHING VERSES CONTAINING JESUS BUT NOT COMING
+select `book name` , `book number`,chapter,verse,`text`
+from bible 
+where text like '%coming%'  and text like'%jesus%' ; 
+
+-- COUNT OF JESUS VERSES EXCLUDING COMING BY BOOK
+select `book name` , `book number`,chapter,verse,`text`
+from bible 
+where text NOT like '%coming%'  and text like'%jesus%' ; 
+
+-- COUNT OF JESUS VERSES EXCLUDING COMING BY BOOK
+select `book name` ,count(*)
+from bible 
+where `text` NOT like '%coming%'  and `text` like'%jesus%'
+group by `book name` ; 
+
+-- SEARCHING VERSES CONTAINING BOTH FAITH AND HOPE
+select `book name` , `book number`,chapter,verse,`text` 
+from bible
+WHERE `text` LIKE '%faith%'
+AND `text` LIKE '%hope%';
+
+-- FINDING THE LONGEST VERSE
+SELECT `book name`, chapter, verse, `text`,
+LENGTH(`text`) AS verse_length
+FROM bible
+ORDER BY verse_length DESC
+LIMIT 1;
+
+-- FINDING THE SHORTEST VERSE
+SELECT `book name`, chapter, verse, `text`,
+LENGTH(`text`) AS verse_length
+FROM bible
+ORDER BY verse_length 
+LIMIT 1;
+
+-- MOST COMMON FIRST WORDS IN VERSES
+SELECT 
+SUBSTRING_INDEX(`text`, ' ', 1) AS first_word,
+COUNT(*) AS total
+FROM bible
+GROUP BY first_word
+ORDER BY total DESC;
+
+-- MOST COMMON LAST WORDS IN VERSES
+SELECT 
+SUBSTRING_INDEX(`text`, ' ', -1) AS last_word,
+COUNT(*) AS total
+FROM bible
+GROUP BY last_word
+ORDER BY total DESC;
+
+-- FINDING DUPLICATE VERSES
+SELECT `text`, COUNT(*)
+FROM bible
+GROUP BY `text`
+HAVING COUNT(*) > 1;
+
+-- CHAPTER WITH HIGHEST NUMBER OF VERSES
+SELECT `book name`,
+chapter,
+COUNT(*) AS total_verses
+FROM bible
+GROUP BY `book name`, chapter
+ORDER BY total_verses DESC
+LIMIT 1;
+
